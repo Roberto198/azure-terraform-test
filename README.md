@@ -12,11 +12,25 @@
 
 ### Log into correct azure account  
 
+Run these commands:
+
 > az login  
 
-### initialise terraform, deploy resources  
+### Initialise terraform, deploy resources  
+
+Run these commands:
 
 
 > terraform init  
 > terraform plan  
-> terraform apply  
+> terraform apply
+
+### Create a function-app (This has already been done, creates the 'Client' function app)
+
+> func init Client --dotnet
+
+### Create a c# / dotnet function inside the client folder
+
+> func new --name ${function name here} --template "Http trigger" --authlevel "anonymous"  
+
+Note: --authlevel currently anonymous, subject to change 
