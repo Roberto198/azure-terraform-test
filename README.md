@@ -34,3 +34,7 @@ Run these commands:
 > func new --name ${function name here} --template "Http trigger" --authlevel "anonymous"  
 
 Note: --authlevel currently anonymous, subject to change 
+
+#### To deploy the function-app as a whole, in the client or admin  
+> cd ./Client
+> func azure functionapp publish ${environment}-functionApp-VMS

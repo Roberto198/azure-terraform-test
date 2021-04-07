@@ -19,7 +19,7 @@ resource "azurerm_app_service_plan" "consumptionServicePlan" {
   name                = "${var.environment}-functionplan-01"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  kind                = "Linux"
+  kind                = "FunctionApp"
   reserved            = true
 
   sku {
@@ -45,7 +45,43 @@ resource "azurerm_function_app" "client" {
   os_type                       = "linux"
 
 
+
+  //TODO: remove passwords and usernames
   app_settings = {
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.appInsights.instrumentation_key
+    "sqldb_connection": "Server=tcp:robc-sqlserver-vms.database.windows.net,1433;Initial Catalog=robc-serverles-db-vms;Persist Security Info=False;User ID=robc;Password={password-123456789};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   }
+}
+
+resource "azurerm_sql_server" "sqlserver" {
+    name                        = "${var.environment}-sqlserver-vms"
+    location                      = azurerm_resource_group.rg.location
+    resource_group_name           = azurerm_resource_group.rg.name
+    version                     = "12.0"
+
+    administrator_login         = var.environment
+    administrator_login_password = "password-123456789"
+}
+
+resource "azurerm_mssql_database" "serverless_db" {
+    name                        = "${var.environment}-serverles-db-vms"
+    server_id                   = azurerm_sql_server.sqlserver.id
+    collation                   = "SQL_Latin1_General_CP1_CI_AS"
+
+    auto_pause_delay_in_minutes = 60
+    max_size_gb                 = 32
+    min_capacity                = 0.5
+    read_replica_count          = 0
+    read_scale                  = false
+    sku_name                    = "GP_S_Gen5_1"
+    zone_redundant              = false
+
+    threat_detection_policy {
+        disabled_alerts      = []
+        email_account_admins = "Disabled"
+        email_addresses      = []
+        retention_days       = 0
+        state                = "Disabled"
+        use_server_default   = "Disabled"
+    }
 }
