@@ -1,4 +1,4 @@
-namespace Client.Models
+namespace VMS.Client.Models
 {
     public class Van
     {
