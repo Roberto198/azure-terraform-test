@@ -1,6 +1,6 @@
 namespace VMS.Client.Models
 {
-    public class Van
+    public class VanResponse
     {
             public string numberPlate { get; set; }
             public string size { get; set; }
