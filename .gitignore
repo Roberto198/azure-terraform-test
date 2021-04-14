@@ -9,8 +9,6 @@ infrastructure/settings.json
 # Azure Functions localsettings file
 local.settings.json
 
-#Migrations
-/VMS.Model/Migrations/
 
 # User-specific files
 *.suo

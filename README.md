@@ -36,6 +36,15 @@ Run these commands:
 
 Note: --authlevel currently anonymous, subject to change 
 
-#### To deploy the function-app as a whole, in the client or admin  
+### To set up this project
+
+You need a local.settings.json in the Client folder for environment variables.
+You need a settings.json in the Infrastructure folder for terraform variables.
+
+
+### To deploy the function-app as a whole, in the client or admin  
 > cd ./Client
 > func azure functionapp publish ${environment}-functionApp-VMS
+
+
+### To run migrations 
