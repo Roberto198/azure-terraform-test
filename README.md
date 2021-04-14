@@ -7,6 +7,7 @@
 [dotnet core 3.1](https://dotnet.microsoft.com/download)  
 [Azure Functions Core Tools](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=windows%2Ccsharp%2Cbash#v2)  
 [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)  
+[dotnet EF Core tools] (https://docs.microsoft.com/en-us/ef/core/cli/dotnet)
 
 ## Deployment
 

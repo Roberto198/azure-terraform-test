@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using VMS.Client.Models;
+using VMS.Client.DbModels;
 
 [assembly: FunctionsStartup(typeof(VMS.Client.Startup))]
 
@@ -13,17 +13,11 @@ namespace VMS.Client
         public override void Configure(IFunctionsHostBuilder builder)
         {
 
-            var sqlConnection = Environment.GetEnvironmentVariable("SqlConnectionString");
-            builder.Services.AddDbContext<VMSDbContext>(options => options.UseSqlServer(sqlConnection));
+            string sqlConnection = Environment.GetEnvironmentVariable("SqlConnectionString");
+            builder.Services.AddDbContext<VMSContext>(options => options.UseSqlServer(sqlConnection));
+            builder.Services.AddScoped<IVanController, VanController>();
 
 
-            // builder.Services.AddHttpClient();
-
-            //builder.Services.AddSingleton<IMyService>((s) => {
-            //    return new MyService();
-            //});
-
-            //builder.Services.AddSingleton<ILoggerProvider, MyLoggerProvider>();
         }
     }
 }

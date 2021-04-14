@@ -7,7 +7,7 @@ resource "azurerm_resource_group" "rg" {
 
 # create a storaage account
 resource "azurerm_storage_account" "functionsStorageAccount" {
-  name                     = "${var.environment}vms"
+  name                     = "${var.environment}functionstoragevms"
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
@@ -36,7 +36,7 @@ resource "azurerm_application_insights" "appInsights" {
 }
 
 resource "azurerm_function_app" "client" {
-  name                          = "${var.environment}-functionApp-VMS"
+  name                          = "${var.environment}-functionApp1-VMS"
   location                      = azurerm_resource_group.rg.location
   resource_group_name           = azurerm_resource_group.rg.name
   app_service_plan_id           = azurerm_app_service_plan.consumptionServicePlan.id
@@ -49,12 +49,12 @@ resource "azurerm_function_app" "client" {
   //TODO: remove passwords and usernames
   app_settings = {
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.appInsights.instrumentation_key
-    "sqldb_connection": "Server=tcp:robc-sqlserver-vms.database.windows.net,1433;Initial Catalog=robc-serverles-db-vms;Persist Security Info=False;User ID=robc;Password={password-123456789};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+    "sqldb_connection": "Server=tcp:robc-sqlserver-vms1.database.windows.net,1433;Initial Catalog=robc-serverles-db-vms;Persist Security Info=False;User ID=robc;Password=password-123456789;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   }
 }
 
 resource "azurerm_sql_server" "sqlserver" {
-    name                        = "${var.environment}-sqlserver-vms"
+    name                        = "${var.environment}-sqlserver-vms1"
     location                      = azurerm_resource_group.rg.location
     resource_group_name           = azurerm_resource_group.rg.name
     version                     = "12.0"
@@ -84,4 +84,17 @@ resource "azurerm_mssql_database" "serverless_db" {
         state                = "Disabled"
         use_server_default   = "Disabled"
     }
+}
+
+resource "azurerm_mssql_firewall_rule" "vms-dev-firewall-rule" {
+  name             = "vms-${var.environment}-firewall-rule"
+  server_id        = azurerm_sql_server.sqlserver.id
+  start_ip_address = "0.0.0.0"
+  end_ip_address   = "0.0.0.0"
+}
+resource "azurerm_mssql_firewall_rule" "vms-dev-firewall-rule-development" {
+  name             = "vms-${var.environment}-firewall-rule"
+  server_id        = azurerm_sql_server.sqlserver.id
+  start_ip_address = local.json_data.ipAddress
+  end_ip_address   = local.json_data.ipAddress
 }

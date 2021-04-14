@@ -7,61 +7,45 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using VMS.Client.Models;
+using VMS.Client.DbModels;
+using Microsoft.Extensions.DependencyInjection;
+using VMS.Client;
+
 
 namespace VMS.Client
 {
+
+
     public class GetVehicles
     {
+        private readonly IVanController _vanController;
 
-        private readonly VMSDbContext _context;
 
-        public GetVehicles(VMSDbContext context)
+        public GetVehicles(IVanController vanController)
         {
-            this._context = context;
+            _vanController = vanController;
         }
 
         [FunctionName("GetVehicles")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "vehicles")] HttpRequest req,
-            ILogger log)
+        public async Task<IActionResult> Run
+            (
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "getVehicles")]
+            HttpRequest req,
+            ILogger log
+            )
         {
+            Van[] vans;
+            try
+            {
+                vans = _vanController.GetVansController();
 
+            } catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return new OkObjectResult(e.ToString());
+            }
 
-            //_context.
-
-
-
-             //var str = Environment.GetEnvironmentVariable("sqldb_connection");
-             //using (SqlConnection conn = new SqlConnection(str))
-             //{
-             //    conn.Open();
-             //    var text = "UPDATE SalesLT.SalesOrderHeader " +
-             //            "SET [Status] = 5  WHERE ShipDate < GetDate();";
-
-             //    using (SqlCommand cmd = new SqlCommand(text, conn))
-             //    {
-             //        // Execute the command and log the # rows affected.
-             //        var rows = await cmd.ExecuteNonQueryAsync();
-             //        log.LogInformation($"{rows} rows were updated");
-             //    }
-             //}
-
-
-
-            //Van detail mock data
-            Van response = new Van() {
-
-                VanId = new Guid("9ced95b6 - 6d20 - 4ba6 - 9827 - a59ab70ed02f"),
-                RegistrationNumber = "YH12 JGF",
-                Colour = "red",
-                Size = "small",
-                DriverClass = "driverClass"
-        };
-            
-
-
-          return new OkObjectResult(response);
+            return new OkObjectResult(vans);
         }
     }
 }

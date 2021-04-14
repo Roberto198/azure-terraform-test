@@ -1,4 +1,4 @@
-namespace VMS.Client.Models
+namespace VMS.Client.DbModels
 {
     public class VanResponse
     {

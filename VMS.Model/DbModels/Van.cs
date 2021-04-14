@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace VMS.Client.Models
+namespace VMS.Client.DbModels
 {
     public class Van
     {
@@ -16,11 +16,11 @@ namespace VMS.Client.Models
 
         public DateTime? EnteredSystemDate { get; set; }
 
-        public string Colour { get; set; }
+        public string? Colour { get; set; }
 
-        public string Size { get; set; }
+        public string? Size { get; set; }
 
-        public string DriverClass { get; set; }
+        public string? DriverClass { get; set; }
 
     }
 
